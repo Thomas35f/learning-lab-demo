@@ -17,8 +17,15 @@
                 <option value="family">Famille</option>
             </select>
         </div>
-        <input type="submit" value="Envoyer"
-            class="text-white bg-green-600 border-green-600 border-2 border-solid hover:text-green-600 hover:bg-white transition-200 px-4 py-2 rounded w-fit font-bold cursor-pointer">
+        <div class="flex gap-4">
+            <input type="submit" value="Envoyer"
+                class="text-white bg-green-600 border-green-600 border-2 border-solid hover:text-green-600 hover:bg-white transition-200 px-4 py-2 rounded w-fit font-bold cursor-pointer">
+            <div wire:loading wire:target="submitTask">
+                <div class=" z-50 inset-0 flex justify-center ml-10">
+                    @svg('spinner', 'text-gray-dark w-12 h-12 animate-spin')
+                </div>
+            </div>
+        </div>
     </form>
 
     @script
