@@ -2,7 +2,10 @@
 
 return [
     'category' => [
-        'job' => 'Travail',
-        'hobby' => 'Hobby',
+        'Travail' => 'Travail',
+        'Hobby' => 'Hobby',
+        'Administration' => 'Administration',
+        'Famille' => 'Famille',
+        'Ecole' => 'Ecole'
     ],
 ];

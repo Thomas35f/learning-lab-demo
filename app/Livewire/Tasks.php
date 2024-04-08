@@ -37,8 +37,8 @@ class Tasks extends Component
     {
         $taskToDelete = Task::whereId($id)->first();
         $taskToDelete->delete();
-
         $this->dispatch('task-deleted');
+
     }
 
     //Filtre - catégorie
