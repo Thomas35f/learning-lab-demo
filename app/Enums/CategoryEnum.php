@@ -5,11 +5,11 @@ namespace App\Enums;
 use Spatie\Enum\Enum;
 
 /**
- * @method static self job() Travail
- * @method static self hobby() Hobby
- * @method static self hobby() Administration
- * @method static self hobby() Famille
- * @method static self hobby() Ecole
+ * @method static self Travail() Travail
+ * @method static self Hobby() Hobby
+ * @method static self Administration() Administration
+ * @method static self Hobby() Famille
+ * @method static self Ecole() Ecole
  */
 final class CategoryEnum extends Enum
 {

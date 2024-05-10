@@ -38,7 +38,7 @@
     <div id="listing-tasks">
         <h2 class="font-bold text-xl">Liste des tâches</h2>
         {{-- Filtres --}}
-        <div id="filters">
+        <div id="filters" class="cursor-pointer">
             <div x-data="{ showDropdownCategories: false }">
                 <label x-on:click="showDropdownCategories = !showDropdownCategories" class="block mb-1">Tri par
                     catégorie</label>
@@ -80,7 +80,6 @@
                                     Enregistrer</button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -89,7 +88,7 @@
         {{-- Liste tâches --}}
         <div class="flex flex-col gap-4 mt-6">
             @foreach ($tasks as $task)
-                <div wire:key="{{ $task->id }}"
+                <div wire:key="{{ $task->id }}" x-data="{ 'showUpdateTask{{ $task->id }}': false }"
                     class="border-solid border-gray-200 border-2 rounded p-4 flex flex-col gap-2">
                     <div class="flex">
                         <p class="font-bold">{{ $task->title }}</p>
@@ -98,6 +97,8 @@
                     <p>{{ $task->content }}</p>
                     <div class="flex gap-4">
                         <button class="bg-gray-400 text-white font-bold p-2 rounded"
+                            x-on:click="showUpdateTask{{ $task->id }} = !showUpdateTask{{ $task->id }}">Update</button>
+                        <button class="bg-gray-400 text-white font-bold p-2 rounded"
                             wire:click="deleteTask('{{ $task->id }}')">Effacer</button>
                         <div wire:loading wire:target="deleteTask('{{ $task->id }}')">
                             <div class=" z-50 inset-0 flex justify-center ml-10">
@@ -105,9 +106,50 @@
                             </div>
                         </div>
                     </div>
+
+                    <div x-cloak x-show="showUpdateTask{{ $task->id }}">
+                        <hr class="my-2">
+                        <h2 class="font-bold text-xl mb-4">Mettre à jour la tâche</h2>
+                        <form wire:submit.prevent="updateTask(Object.fromEntries(new FormData($event.target)))"
+                            class="flex flex-col gap-4">
+                            <div>
+                                <label for="title" class="font-bold mb-2">Titre</label>
+                                <input type="text" name="title"
+                                    class="w-full border-2 border-solid border-gray-400 rounded" required
+                                    value="{{ $task->title }}">
+                            </div>
+                            <div>
+                                <label for="content" class="font-bold mb-2">Contenu</label>
+                                <textarea name="content" class="w-full border-2 border-solid border-gray-400 rounded h-14" required>{{ $task->content }}</textarea>
+                            </div>
+                            <div>
+                                <label for="category" class="font-bold mb-2">Catégorie</label>
+                                <select name="category" class="border-2 border-solid border-gray-400 rounded">
+                                    <option default value="{{ $task->category }}">{{ $task->category }}</option>
+                                    <option value="Travail">Travail</option>
+                                    <option value="Administration">Administration</option>
+                                    <option value="Hobby">Hobby</option>
+                                    <option value="Famille">Famille</option>
+                                    <option value="Ecole">Ecole</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="id" value="{{ $task->id }}">
+                            <div class="flex gap-4">
+                                <input type="submit" value="Envoyer"
+                                    x-on:click="showUpdateTask{{ $task->id }} = !showUpdateTask{{ $task->id }}"
+                                    class="text-white bg-green-600 border-green-500 border-2 border-solid hover:text-green-600 hover:bg-white transition-200 px-4 py-2 rounded w-fit font-bold cursor-pointer">
+                                <div wire:loading wire:target="updateTask">
+                                    <div class=" z-50 inset-0 flex justify-center ml-10">
+                                        @svg('spinner', 'text-gray-dark w-12 h-12 animate-spin')
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             @endforeach
         </div>
+
     </div>
 
     @script
@@ -118,6 +160,10 @@
 
             $wire.on('task-deleted', () => {
                 alert('La tâche a été effacée')
+            });
+
+            $wire.on('task-updated', () => {
+                alert('La tâche a été mise à jour')
             });
         </script>
     @endscript

@@ -14,8 +14,6 @@ class Tasks extends Component
     public function mount()
     {
         $this->categories = CategoryEnum::toArray();
-
-        // Check query
     }
 
     //Form - Ajout tâche
@@ -29,6 +27,21 @@ class Tasks extends Component
             $newTask->save();
 
             $this->dispatch('task-created');
+        }
+    }
+
+    //Form - Update tâche
+    public function updateTask($formData)
+    {
+        if($formData) {
+            $task = Task::whereId($formData['id'])->first();
+            $task->update([
+                'title' =>  $formData['title'],
+                'content' =>  $formData['content'],
+                'category' =>  $formData['category'],
+            ]);
+
+            $this->dispatch('task-updated');
         }
     }
 
@@ -47,6 +60,11 @@ class Tasks extends Component
         if($formData) {
             $this->chosenCategory = $formData['category'];
         }
+    }
+
+    public function resetCategory()
+    {
+        $this->chosenCategory = null;
     }
 
     public function render()
